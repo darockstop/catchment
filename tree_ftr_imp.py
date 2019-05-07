@@ -46,7 +46,7 @@ def run(func):
             imps.extend(col_names[ind])
     count = Counter(imps)
 
-    with open('imp_rf.csv', 'w') as csvfile:
+    with open('./output/imp_rf.csv', 'w') as csvfile:
         w = csv.writer(csvfile)
         w.writerow(['attribute', 'freq'])
         for ftr_name, freq in count.items():

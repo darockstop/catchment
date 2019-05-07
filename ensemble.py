@@ -60,7 +60,7 @@ def k_fold_cross(X, y, k, ensemble, filename):
 
 
 def run_ensemble():
-    filename = 'results.csv'
+    filename = './output/results.csv'
     with open(filename, 'a') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['', 'gb', 'rf', 'svm', 'r', 'ens'])

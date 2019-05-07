@@ -16,7 +16,7 @@ def get_data(cols=None):
     :param cols: a list of desired column names
     :return: a numpy array of inputs and targets as well as a list of column names
     """
-    with open('./MLDatabase.csv', 'r') as data_file:
+    with open('./data/MLDatabase.csv', 'r') as data_file:
         df = pd.read_csv(data_file)
     inputs = df.iloc[:, 4:-2]  # 4 because don't want some beg stuff or trgts
     targets = df.iloc[:, -2]  # -2 is nretention, -1 is pretention

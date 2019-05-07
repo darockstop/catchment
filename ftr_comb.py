@@ -62,7 +62,7 @@ def k_fold_cross(X, y, kfold_inds, ensemble, result_file):
 
 
 def run_ensemble():
-    res_filename = 'results.csv'
+    res_filename = './output/results.csv'
     # cols = ['Qmm', 'RiverD', 'Artif', 'Slope', 'perWet', 'SurplusP', 'B e (µg/L)']
     cols = ['Qmm','SurplusP', 'RiverD', 'perWet', 'Artif', 'Agri', 'Slope', 'Relief', 'PMother', 'PMmica', 'PMgranite', 'PMschiste', 'B e (µg/L)']
 
@@ -86,7 +86,7 @@ def run_ensemble():
         ensemble = [gbr, rf, svm_r, rr]
         L1, L2 = k_fold_cross(X, y.reshape(len(X), 1), kfold_inds, ensemble, res_filename)
 
-        with open('summary.csv', 'a') as csvfile:
+        with open('./output/summary.csv', 'a') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow([ftrs, L1, L2])
 

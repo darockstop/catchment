@@ -28,7 +28,7 @@ V_MCE = 5
 
 
 def parse_data(csv_filename):
-    with open('./{}.csv'.format(csv_filename), 'r') as csvfile:
+    with open('./data/{}.csv'.format(csv_filename), 'r') as csvfile:
         df = pd.read_csv(csvfile)
         # df.drop(['PMgranite', 'QNov2015', 'perWet', 'RiverD', 'Slope', 'NO3/Cl', 'NO3-N (mg/L)', 'Water', 'area'], axis=1)
     # set_trace()
@@ -70,7 +70,7 @@ def create_graphs(f, ext, results):
     plt.ylabel('MSE')
     x1, x2, _, y2 = plt.axis()
     plt.axis((x1, x2, 0, y2))
-    plt.savefig('./{}/mse{}.png'.format(f, ext), dpi=300)
+    plt.savefig('./output/graphs/{}/mse{}.png'.format(f, ext), dpi=300)
     plt.clf()
 
 
@@ -261,7 +261,7 @@ def kfold(k, summ_file, dataset, num_nodes, alpha, m, no_change):
         network, num_epochs, vs_MSE, train_MSE = train(X_train, y_train, 'test', '_{}'.format(i), num_nodes, alpha, m, no_change,
                                                        max_epochs=500)
 
-        with open('pred_{}.csv'.format(i), 'w') as pred_file:
+        with open('./output/pred_{}.csv'.format(i), 'w') as pred_file:
             writer = csv.writer(pred_file)
             writer.writerow(['', 'trgt', 'pred', 'diff'])
             test_mse = test_acc(X_test, y_test, network, pred_file)
@@ -280,7 +280,7 @@ def run(dataset, num_nodes, alpha, m, no_change):
     X_train, X_test, y_train, y_test = mltools.random_split(all_inputs, all_targets, test_fraction=.2)
     network, num_epochs, vs_MSE, train_MSE = train(X_train, y_train, 'test', '', num_nodes, alpha, m, no_change, max_epochs=500)
 
-    with open('pred.csv', 'w') as pred_file:
+    with open('./output/pred.csv', 'w') as pred_file:
         writer = csv.writer(pred_file)
         writer.writerow(['', 'trgt', 'pred', 'diff'])
         test_mse = test_acc(X_test, y_test, network, pred_file)
