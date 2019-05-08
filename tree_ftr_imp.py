@@ -28,7 +28,7 @@ def gbr(X_train, y_train, X_test, y_test):
 
 
 def plot_imp(imp, x_names, ax):
-    imp = 100 * (imp / imp.max())
+    imp = 100 * (imp / np.sum(imp))
     sorted_ind = np.argsort(imp)
     sorted_ind = sorted_ind[-10:]  # keep top 10 features only
     ax.barh(x_names[sorted_ind], imp[sorted_ind], color='#635a4d')
@@ -46,6 +46,7 @@ def run():
 
 
     for j in range(len(t_names)):
+        from pdb import set_trace; set_trace()
         axarr[j, 0].annotate(t_names[j],xy=(0, 0.5), xytext=(-axarr[j, 0].yaxis.labelpad-5,0), 
             xycoords=axarr[j, 0].yaxis.label, textcoords='offset points', 
             size='large', ha='right', va='center')
