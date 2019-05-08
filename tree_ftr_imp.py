@@ -3,28 +3,9 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from collections import Counter
-from mltools import get_data, get_folds
+from mltools import *
 import matplotlib.pyplot as plt
 
-
-def rf(X_train, y_train, X_test, y_test):
-    forest = RandomForestRegressor(n_estimators=10)
-    forest.fit(X_train, y_train)
-    y_pred = forest.predict(X_test)
-    L1 = np.average(np.abs(np.subtract(y_pred, y_test)))
-    L2 = np.average(np.square(np.subtract(y_pred, y_test)))
-    imp = forest.feature_importances_
-    return L1, L2, y_pred, imp
-
-
-def gbr(X_train, y_train, X_test, y_test):
-    regressor = GradientBoostingRegressor()
-    regressor.fit(X_train, y_train)
-    y_pred = regressor.predict(X_test)
-    L1 = np.average(np.abs(np.subtract(y_pred, y_test)))
-    L2 = np.average(np.square(np.subtract(y_pred, y_test)))
-    imp = regressor.feature_importances_
-    return L1, L2, y_pred, imp
 
 
 def plot_imp(imp, x_names, ax):
@@ -46,7 +27,6 @@ def run():
 
 
     for j in range(len(t_names)):
-        from pdb import set_trace; set_trace()
         axarr[j, 0].annotate(t_names[j],xy=(0, 0.5), xytext=(-axarr[j, 0].yaxis.labelpad-5,0), 
             xycoords=axarr[j, 0].yaxis.label, textcoords='offset points', 
             size='large', ha='right', va='center')
@@ -55,7 +35,7 @@ def run():
 
         rf_imps = np.zeros(len(x_names))
         gb_imps = np.zeros(len(x_names))
-        for _ in range(333):
+        for _ in range(1):
             kfolds = get_folds(3, (X, t.reshape(num_samples, 1)))
             for i in range(3):
                 fold = kfolds[i]
@@ -66,8 +46,8 @@ def run():
                 y_test = y_test.ravel()
                 y_train = y_train.ravel()
 
-                _, _, _, rf_imp = rf(X_train, y_train, X_test, y_test)
-                _, _, _, gb_imp = gbr(X_train, y_train, X_test, y_test)
+                _, _, _, _, rf_imp = rf(X_train, y_train, X_test, y_test, get_imp=True)
+                _, _, _, _, gb_imp = gbr(X_train, y_train, X_test, y_test, get_imp=True)
 
                 rf_imps += rf_imp
                 gb_imps += gb_imp
