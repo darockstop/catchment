@@ -18,19 +18,20 @@ def get_data(cols=None):
     """
     with open('./data/MLDatabase.csv', 'r') as data_file:
         df = pd.read_csv(data_file)
+        df = df.drop(['QMar2016', 'QNov2015', 'QJune2018'], axis=1)
     inputs = df.iloc[:, 4:-2]  # 4 because don't want some beg stuff or trgts
-    targets = df.iloc[:, -2]  # -2 is nretention, -1 is pretention
+    targets = df.iloc[:, -2:]  # -2 is nretention, -1 is pretention
 
     if cols:
         inputs = inputs[cols]
-        col_names = cols
+        x_names = cols
 
     inputs = np.array(inputs)
     targets = np.array(targets)
 
     if not cols:
         # Handle unknowns by ignoring that whole column
-        col_names = df.columns.values[4:-2]
+        x_names = df.columns.values[4:-2]
         _, num_ftrs = inputs.shape
         to_keep = []
         for i in range(num_ftrs):
@@ -39,9 +40,9 @@ def get_data(cols=None):
                 to_keep.append(i)
 
         inputs = inputs[:, to_keep]
-        col_names = col_names[to_keep]
+        x_names = x_names[to_keep]
 
-    return normalize(inputs), targets, col_names
+    return normalize(inputs), targets, x_names, ['n retention', 'p retention']
 
 
 def get_folds(k, data=None):
