@@ -4,6 +4,7 @@ from sklearn import svm as svm_r
 from sklearn import linear_model
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import GradientBoostingRegressor
+import csv
 
 
 def normalize(matrix):
@@ -19,8 +20,11 @@ def get_data(cols=None):
     with open('./data/MLDatabase.csv', 'r') as data_file:
         df = pd.read_csv(data_file)
         df = df.drop(['QMar2016', 'QNov2015', 'QJune2018'], axis=1)
+        df = df[df['retentionN'] != 0]
+        df = df.dropna(subset=['retentionN'])
     inputs = df.iloc[:, 4:-2]  # 4 because don't want some beg stuff or trgts
     targets = df.iloc[:, -2:]  # -2 is nretention, -1 is pretention
+
 
     if cols:
         inputs = inputs[cols]
@@ -46,9 +50,9 @@ def get_data(cols=None):
 
 
 def get_folds(k, data=None):
-    rand = np.random.permutation(49) * 3  # there are 49 different sites, each with three samplings
-    num_in_fold = 49 // k
-    num_extra = 49 % k
+    rand = np.random.permutation(27) * 3  # there are 27 different sites, each with three samplings
+    num_in_fold = 27 // k
+    num_extra = 27 % k
 
     # split permutations into sections
     kfold_inds = [[] for _ in range(k)]
@@ -109,9 +113,9 @@ def train(clf, X_train, y_train, X_test, y_test, get_imp=False):
     L1_ts = np.average(np.abs(np.subtract(pred_test, y_test)))
     L2_ts = np.average(np.square(np.subtract(pred_test, y_test)))
     
-    # with open('./output/pred.csv', 'a') as csvfile:
-    #     w = csv.writer(csvfile)
-    #     w.writerow(pred_test)
+    with open('./output/pred.csv', 'a') as csvfile:
+        w = csv.writer(csvfile)
+        w.writerow(pred_test)
 
     imp = clf.feature_importances_ if get_imp else None
     
@@ -125,7 +129,7 @@ def rf(X_train, y_train, X_test, y_test, get_imp=False):
     
 
 def gbr(X_train, y_train, X_test, y_test, get_imp=False):
-    regressor = GradientBoostingRegressor(n_estimators=5)
+    regressor = GradientBoostingRegressor(n_estimators=50)
     L1_tr, L2_tr, L1_ts, L2_ts, imp = train(regressor, X_train, y_train, X_test, y_test, get_imp)
     return L1_tr, L2_tr, L1_ts, L2_ts, imp
     
